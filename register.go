@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-     "github.com/zeromicro/go-zero/core/logx"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -18,7 +17,8 @@ import (
 // RegisterService register service to nacos
 func RegisterService(opts *Options) error {
 	pubListenOn := figureOutListenOn(opts.ListenOn)
-
+    logx.Info("--->opts.ServiceName="+opts.ServiceName)
+    logx.Info("--->opts.Group="+opts.Group)
 	host, ports, err := net.SplitHostPort(pubListenOn)
 	if err != nil {
 		return fmt.Errorf("failed parsing address error: %v", err)

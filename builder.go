@@ -40,7 +40,9 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	}
 	port, _ := strconv.ParseUint(ports, 10, 16)
 
-	logx.Info("==> 网关获取的 nacos 对象  tgt  <===="+tgt)
+	logx.Info("==> 网关获取的 nacos 对象  tgt.AppName  <===="+tgt.AppName)
+	logx.Info("==> 网关获取的 nacos 对象  tgt.NamespaceID  <===="+tgt.NamespaceID)
+
 
      /*
 	sc := []constant.ServerConfig{
