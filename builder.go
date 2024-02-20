@@ -40,29 +40,32 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	}
 	port, _ := strconv.ParseUint(ports, 10, 16)
 
-	logx.Info("==> 网关获取的 nacos 对象  tgt.Service  <===="+tgt.Service)
-	logx.Info("==> 网关获取的 nacos 对象  tgt.NamespaceID  <===="+tgt.NamespaceID)
+	logx.Info("==> 网关获取的 nacos 对象tgt.Service<===="+tgt.Service)
+	logx.Info("==> 网关获取的 nacos 对象tgt.NamespaceID<===="+tgt.NamespaceID)
+    logx.Info("==> 网关获取的 nacos 对象   <===="+host)
+    fmt.Print("port:", port);
 
-
-     /*
 	sc := []constant.ServerConfig{
         		*constant.NewServerConfig(host, port, constant.WithContextPath("/nacos")),
-     }*/
+     }
+
+    logx.Info("==> 成功初始化 ServerConfig 对象 <====")
 
 
-
+    /*
 	sc := []constant.ServerConfig{
 		*constant.NewServerConfig(host, port),
-	}
+	} */
 
 	cc := &constant.ClientConfig{
 		AppName:     tgt.Service,
 		NamespaceId: tgt.NamespaceID,
-		TimeoutMs:   uint64(tgt.Timeout),
+		TimeoutMs:   12000,
 		NotLoadCacheAtStart:  tgt.NotLoadCacheAtStart,
 		UpdateCacheWhenEmpty: tgt.UpdateCacheWhenEmpty,
 	}
 
+     logx.Info("==> 成功初始化 ClientConfig 对象 <====");
 
 	// start
 	/*
@@ -93,7 +96,7 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 		ClientConfig:  cc,
 	})
 
-
+      logx.Info("==> 成功初始化 NewNamingClient 对象 <====")
 
 
 	if err != nil {
@@ -115,6 +118,8 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 		GroupName:         tgt.GroupName,
 		SubscribeCallback: newWatcher(ctx, cancel, pipe).CallBackHandle, // required
 	})
+
+     logx.Info("==> 成功订阅 nacos  <====")
 
 	go populateEndpoints(ctx, conn, pipe)
 
