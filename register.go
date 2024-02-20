@@ -2,12 +2,11 @@ package nacos
 
 import (
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"strconv"
 	"strings"
-
+     "github.com/zeromicro/go-zero/core/logx"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,7 +32,7 @@ func RegisterService(opts *Options) error {
 		},
 	)
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 
 	// service register
@@ -65,7 +64,7 @@ func RegisterService(opts *Options) error {
 			Ephemeral:   true,
 		})
 		if err != nil {
-			logx.Info("deregister service error: ", err.Error())
+			panic(err)
 		} else {
 			logx.Info("deregistered service from nacos server.")
 		}

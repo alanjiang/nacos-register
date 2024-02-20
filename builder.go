@@ -5,17 +5,17 @@ import (
 	"fmt"
 	"net"
 	"strconv"
-
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/resolver"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 func init() {
 
-    fmt.Print("----> nacos init <-----")
+   	logx.Info("==> Nacos init <====")
 	resolver.Register(&builder{})
 }
 
@@ -27,7 +27,8 @@ const schemeName = "nacos"
 type builder struct{}
 
 func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
-	fmt.Print("==> grpc-go/resolver/resolver.go Build 接口实现 <====")
+
+	logx.Info("==> grpc-go/resolver/resolver.go Build 接口实现 <====")
 	tgt, err := parseURL(url.URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "Wrong nacos URL")
@@ -39,20 +40,15 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	}
 	port, _ := strconv.ParseUint(ports, 10, 16)
 
-	fmt.Print("********Host, port ******")
+	logx.Info("==> 网关获取的 nacos 对象  tgt  <===="+tgt)
 
-	fmt.Print("**port:", port)
-
-	fmt.Print("**host:", host)
-
-	fmt.Print("********Host, port ******")
-
+     /*
 	sc := []constant.ServerConfig{
         		*constant.NewServerConfig(host, port, constant.WithContextPath("/nacos")),
-     }
+     }*/
 
 
-    /*
+
 	sc := []constant.ServerConfig{
 		*constant.NewServerConfig(host, port),
 	}
@@ -60,15 +56,14 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	cc := &constant.ClientConfig{
 		AppName:     tgt.AppName,
 		NamespaceId: tgt.NamespaceID,
-		AccessKey:    tgt.User,
-		SecretKey:    tgt.Password,
 		TimeoutMs:   uint64(tgt.Timeout),
 		NotLoadCacheAtStart:  tgt.NotLoadCacheAtStart,
 		UpdateCacheWhenEmpty: tgt.UpdateCacheWhenEmpty,
-	} */
+	}
 
 
 	// start
+	/*
 	cc :=  constant.NewClientConfig(
                 	constant.WithTimeoutMs(10*1000),
                 	constant.WithBeatInterval(2*1000),
@@ -76,7 +71,7 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
                 	constant.WithNamespaceId(tgt.NamespaceID),
                 	constant.WithOpenKMS(false),
                 	constant.WithRegionId("cn-hangzhou-e"),
-      )
+      ) */
 
 	// end
 
@@ -90,10 +85,6 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 		cc.LogLevel = tgt.LogLevel
 	}
 
-
-    fmt.Print("===>nacos:", tgt)
-
-     fmt.Print("nacos<=====")
 
 	cli, err := clients.NewNamingClient(vo.NacosClientParam{
 		ServerConfigs: sc,
@@ -111,7 +102,10 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	pipe := make(chan []string)
     tgt.GroupName = tgt.GroupName
 
-    fmt.Print("***GroupName", tgt.GroupName)
+    logx.Info("==> serviceName="+tgt.Service)
+
+    logx.Info("==> GroupName="+tgt.GroupName)
+
 
 	go cli.Subscribe(&vo.SubscribeParam{
 		ServiceName:       tgt.Service,
