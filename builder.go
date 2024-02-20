@@ -40,7 +40,7 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	}
 	port, _ := strconv.ParseUint(ports, 10, 16)
 
-	logx.Info("==> 网关获取的 nacos 对象  tgt.AppName  <===="+tgt.AppName)
+	logx.Info("==> 网关获取的 nacos 对象  tgt.Service  <===="+tgt.Service)
 	logx.Info("==> 网关获取的 nacos 对象  tgt.NamespaceID  <===="+tgt.NamespaceID)
 
 
@@ -56,7 +56,7 @@ func (b *builder) Build(url resolver.Target, conn resolver.ClientConn, opts reso
 	}
 
 	cc := &constant.ClientConfig{
-		AppName:     tgt.AppName,
+		AppName:     tgt.Service,
 		NamespaceId: tgt.NamespaceID,
 		TimeoutMs:   uint64(tgt.Timeout),
 		NotLoadCacheAtStart:  tgt.NotLoadCacheAtStart,
